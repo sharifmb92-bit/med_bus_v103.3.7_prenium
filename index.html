@@ -25,9 +25,14 @@
     
     <style>
         [x-cloak] { display: none !important; }
-        body { background-color: #1a1d23; color: #e2e8f0; font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; padding-bottom: env(safe-area-inset-bottom); font-size: 14px; }
-        .card-main { background: #23272e; border-radius: 1rem; border: 1px solid #2d333f; padding: 12px; }
-        .block-hora { background-color: #1e293b; padding: 8px; border-radius: 10px; flex: 1; position: relative; }
+        body { background-color: #0f1115; /* Fondo negro mate profundo */
+    color: #94a3b8;}
+   .card-main { background: #1a1d23; /* Fondo de las tarjetas gris pizarra */
+    border: 1px solid #282d35; }
+   .block-hora { 
+    background-color: #111418; /* Fondo de los cuadros donde escribes */
+    border: 1px solid #1e222a;
+   }
         input { background: transparent; border: none; color: white; font-weight: 900; outline: none; width: 100%; text-align: center; }
         input[type="time"] { font-size: 1.9rem; color: #60a5fa; }
         input[type="number"] { font-size: 1.7rem; color: #22d3ee; }
@@ -45,6 +50,9 @@
             <div class="flex justify-between items-center">
                 <div><h1 class="text-xl font-black text-white">Med. Basha</h1><p class="label-small text-blue-500">v103.3.7</p></div>
                 <div class="flex gap-2">
+                    <button @click="screen = 4" class="flex items-center justify-center bg-[#1a1d23] border border-[#282d35] p-3 rounded-xl shadow-lg active:scale-95 transition-transform">
+                    <span class="material-symbols-outlined text-gray-400">settings</span>
+                    </button>
                     <button @click="abrirCalendarioConAlarma()" class="bg-yellow-600 p-2 rounded-lg shadow-lg"><span class="material-symbols-outlined text-xl text-white">notifications_active</span></button>
                     <button @click="screen = 3" class="bg-blue-600 p-2 rounded-lg shadow-lg"><span class="material-symbols-outlined text-xl">analytics</span></button>
                 </div>
@@ -184,7 +192,41 @@
             </div>
             <div class="grid grid-cols-2 gap-2 pb-24"><button @click="generarPDF()" class="bg-gray-700 py-4 rounded-xl font-black text-xs text-white uppercase">PDF</button><button @click="enviarWhatsapp()" class="bg-green-600 py-4 rounded-xl font-black text-xs text-white uppercase">WhatsApp</button></div>
         </main>
-    </template>
+    <template x-if="screen === 4">
+    <main class="p-3 space-y-4 h-full flex flex-col" x-transition>
+        
+        <div class="flex items-center gap-4 border-b border-white/5 pb-4">
+            <button @click="screen = 1" class="material-symbols-outlined text-2xl text-gray-400">arrow_back</button>
+            <h2 class="font-black uppercase text-blue-400 text-sm tracking-widest">Ajustes del Sistema</h2>
+        </div>
+
+        <div class="card-main space-y-6">
+            
+            <div>
+                <label class="block text-[10px] uppercase font-bold text-gray-500 mb-2">Mi Código Gris Personal</label>
+                <div class="flex gap-2">
+                    <input type="text" x-model="settings.colorGris" 
+                           class="bg-black/40 border border-white/10 p-3 rounded-lg w-full text-center font-mono text-yellow-500"
+                           placeholder="#7E7E7E">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-[10px] uppercase font-bold text-gray-500 mb-2">Precio por Dieta (€)</label>
+                <input type="number" x-model="settings.precioDieta" 
+                       class="bg-black/40 border border-white/10 p-3 rounded-lg w-full text-center text-xl font-black text-green-500">
+            </div>
+
+        </div>
+
+        <div class="mt-auto py-4">
+            <p class="text-[9px] text-center text-gray-600 leading-tight">
+                LOS CAMBIOS SE APLICAN AL INSTANTE Y SE GUARDAN EN TU DISPOSITIVO.
+            </p>
+        </div>
+
+    </main>
+</template>
 
     <script>
         function tmsaApp() {
@@ -195,7 +237,7 @@
                 history: [], mes: new Date().getMonth(), año: new Date().getFullYear(), mesNombre: '', 
                 totalMesH: 0, totalMesD: 0, totalMesN: 0, totalMesK: 0,
                 urlSheets: "https://script.google.com/macros/s/AKfycbzpQuJ5O7S1zXw4FDSRcFqESzslF7SbZwNnPxTWfAjO2bXgfBL5yrA_XBuAV5u8P0763A/exec",
-
+                settings: { colorGris: '#7e7e7e', precioDieta: 12.00 },
                 initApp() {
                     this.history = JSON.parse(localStorage.getItem('tmsa_history_v98') || '[]');
                     this.renderCalendario(); this.updateClock(); setInterval(() => this.updateClock(), 1000);
