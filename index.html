@@ -218,7 +218,10 @@
                 },
 
                 abrirGoogleSheets() { window.open(this.urlSheets, '_blank'); },
-                
+                parseNum(valor) {
+               let n = parseFloat(valor);
+               return isNaN(n) ? 0 : n   
+               },
                 calcularTodo() {
                     const parseTime = (t) => { if(!t) return null; let [h,m]=t.split(':').map(Number); return h*60+m; };
                     let tE1 = parseTime(this.form.horaE1), tS1 = parseTime(this.form.horaS1);
